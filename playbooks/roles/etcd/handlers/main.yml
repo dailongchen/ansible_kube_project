@@ -1,0 +1,9 @@
+- name: restart etcd
+  service: name=etcd state=restarted enabled=true
+  become: true
+  become_user: root
+
+- name: test etcd
+  shell: etcdctl cluster-health
+  become: true
+  become_user: root

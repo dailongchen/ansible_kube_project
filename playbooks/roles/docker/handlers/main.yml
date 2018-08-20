@@ -1,0 +1,9 @@
+- name: restart Docker
+  service: name=docker state=restarted enabled=true
+  become: true
+  become_user: root
+
+- name: test Docker
+  shell: docker run hello-world
+  become: true
+  become_user: root

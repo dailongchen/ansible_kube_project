@@ -1,0 +1,32 @@
+- name: send certs file
+  copy:
+    src="{{ item }}"
+    dest="/home/solon/etcd-certificate/"
+  with_fileglob:
+    - roles/etcd/files/crts/*.pem
+
+- name: install etcd
+  apt:
+    name: etcd
+  become: true
+  become_user: root
+  notify:
+    - restart etcd
+    - test etcd
+
+- name: install libcurl4-gnutls-dev
+  apt:
+    name: libcurl4-gnutls-dev
+  become: true
+  become_user: root
+
+- name: send add_trust script
+  copy:
+    src="add_trust.sh"
+    dest="/home/solon/etcd-certificate/"
+
+
+# - name: run add_trust
+#   shell: /home/solon/etcd-certificate/add_trust.sh
+#   become: true
+#   become_user: root

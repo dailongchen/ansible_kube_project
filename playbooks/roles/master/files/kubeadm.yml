@@ -1,0 +1,12 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+# etcd:
+#   endpoints:
+#     - https://127.0.0.1:2379
+#   caFile: /home/solon/etcd-certificate/ca.pem
+#   certFile: /home/solon/etcd-certificate/client.pem
+#   keyFile: /home/solon/etcd-certificate/client-key.pem
+networking:
+  podSubnet: "10.244.0.0/16"
+kubernetesVersion: "v1.11.1"
+# imageRepository: "10.32.254.30:5000"

@@ -1,0 +1,9 @@
+---
+- hosts: kube-master
+  remote_user: solon
+  roles:
+  - common
+  - docker
+  # - etcd
+  - kubelet
+  - master

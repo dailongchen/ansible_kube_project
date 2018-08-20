@@ -1,0 +1,6 @@
+[kube-master]
+192.168.31.180 ansible_user=solon ansible_sudo_pass=letmein
+
+[kube-nodes]
+192.168.31.247 ansible_user=solon ansible_sudo_pass=letmein
+192.168.31.135 ansible_user=solon ansible_sudo_pass=letmein

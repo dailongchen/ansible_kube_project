@@ -1,0 +1,24 @@
+---
+- name: "install vim, curl"
+  apt:
+    name: vim,curl
+  become: true
+  become_user: root
+
+- name: "install apt-transport-https, ca-certificates, software-properties-common"
+  apt:
+    name: apt-transport-https,ca-certificates,software-properties-common
+  become: true
+  become_user: root
+
+- name: send trust_cert file
+  copy:
+    src: trust_cert.sh
+    dest: /home/solon/
+    mode: u+rwx
+
+- name: "install libcurl4-gnutls-dev"
+  apt:
+    name: libcurl4-gnutls-dev
+  become: true
+  become_user: root

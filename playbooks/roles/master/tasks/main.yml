@@ -1,0 +1,78 @@
+---
+
+- name: echo $HOME
+  command: echo $HOME
+  register: echo_home
+
+- set_fact: user_home={{ echo_home.stdout }}
+
+- name: echo $(id -u)
+  command: id -u
+  register: echo_user_id
+
+- set_fact: user_id={{ echo_user_id.stdout }}
+
+- name: echo $(id -g)
+  command: id -g
+  register: echo_user_group_id
+
+- set_fact: user_group_id={{ echo_user_group_id.stdout }}
+
+- name: send yaml file
+  copy:
+    src="{{ item }}"
+    dest="{{ user_home }}/kubernetes/yml/"
+  with_fileglob:
+    - roles/master/files/*.yml
+  become: true
+  become_user: root
+
+- name: Disable swap
+  command: swapoff -a
+  become: true
+  become_user: root
+
+- name: Disable swapoff permanently
+  replace:
+    path: /etc/fstab
+    regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+    replace: '#\1\2\3swap\4'
+    backup: yes
+  become: true
+  become_user: root
+
+- name: verify connectivity to gcr.io registries
+  command: kubeadm config images pull
+  become: true
+  become_user: root
+
+- name: revert all previous kubeadm init/join changes
+  command: kubeadm reset --force
+  become: true
+  become_user: root
+
+- name: Exec kubeadm init
+  command: kubeadm init --config {{ user_home }}/kubernetes/yml/kubeadm.yml --ignore-preflight-errors=all
+  become: true
+  become_user: root
+
+- name: create folder .kube
+  shell: mkdir -p {{ user_home }}/.kube
+
+- name: copy admin.conf to .kube/config
+  shell: cp -i /etc/kubernetes/admin.conf {{ user_home }}/.kube/config; chown {{ user_id }}:{{ user_group_id }} {{ user_home }}/.kube/config
+  become: true
+  become_user: root
+
+- name: Generate cluster join script
+  command: kubeadm token create --print-join-command
+  register: cluster_join
+  become: true
+  become_user: root
+
+- set_fact: cluster_join_script={{ cluster_join.stdout }}
+
+- name: set up cni
+  command: kubectl apply -f {{ user_home }}/kubernetes/yml/kube-flannel.yml
+  become: true
+  become_user: root

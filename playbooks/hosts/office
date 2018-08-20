@@ -1,0 +1,9 @@
+[kube-master]
+10.32.233.66 ansible_user=solon ansible_sudo_pass=letmein
+
+[kube-nodes]
+10.32.254.26 ansible_user=solon ansible_sudo_pass=letmein
+10.32.254.27 ansible_user=solon ansible_sudo_pass=letmein
+
+[docker-registry]
+10.32.254.30 ansible_user=solon ansible_sudo_pass=letmein

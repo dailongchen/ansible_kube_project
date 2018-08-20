@@ -1,0 +1,3 @@
+# On Ubuntu Xenial 16.04 (LTS)
+# deb http://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+deb http://apt.kubernetes.io/ kubernetes-xenial main

@@ -1,0 +1,27 @@
+- name: add packages.cloud.google.com to trust cert
+  shell: /home/solon/trust_cert.sh packages.cloud.google.com 443
+  become: true
+  become_user: root
+
+- name: update /etc/apt/sources.list.d/kubernetes.list
+  template:
+    src: kubernetes.list
+    dest: /etc/apt/sources.list.d/kubernetes.list
+  become: true
+  become_user: root
+
+- name: "Add a gpg key, from packages.cloud.google.com"
+  apt_key:
+    # url: https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+    validate_certs: false
+  become: true
+  become_user: root
+
+- name: install kubernetes
+  apt:
+    name: kubelet,kubeadm,kubectl
+    update_cache: true
+  become: true
+  become_user: root

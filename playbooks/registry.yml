@@ -1,0 +1,6 @@
+---
+- hosts: docker-registry
+  remote_user: solon
+  roles:
+  - common
+  - docker
